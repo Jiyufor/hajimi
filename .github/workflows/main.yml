@@ -1,17 +1,13 @@
 name: GHCR CI
 on: [push, workflow_dispatch]
 
-# 核心权限声明必须放在这里（全局生效） ▼▼▼
 permissions:
-  contents: read   # 读取代码权限
-  packages: write  # GHCR写入权限（最关键！）
-  id-token: write  # 必需：用于GITHUB_TOKEN自动认证
+  contents: read
+  packages: write
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    # 此处不再需要重复声明permissions
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,15 +16,13 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: jiyufor  # 硬编码全小写
+          username: jjyufor  # 硬编码你的用户名
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ghcr.io/jiyufor/hajimi:latest
+          tags: ghcr.io/jjyufor/hajimi:latest
+          # 关键修改：完全删除缓存配置
           platforms: linux/amd64
-          # 确保缓存和凭证传递
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
