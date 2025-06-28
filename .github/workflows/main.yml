@@ -16,13 +16,13 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: jjyufor  # 硬编码你的用户名
+          username: jiyufor  # 硬编码你的用户名
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ghcr.io/jjyufor/hajimi:latest
+          tags: ghcr.io/jiyufor/hajimi:latest
           # 关键修改：完全删除缓存配置
           platforms: linux/amd64
