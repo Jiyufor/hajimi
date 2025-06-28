@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write  # 确保有写入权限
+      packages: write  # 必须要有这个权限
 
     steps:
     - name: Checkout repository
@@ -20,22 +20,22 @@ jobs:
       id: version
       run: echo "VERSION=$(cat version.txt | grep version= | cut -d= -f2)" >> $GITHUB_OUTPUT
 
-    - name: Log in to the GitHub Container Registry
+    - name: Log in to GHCR
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        username: ${{ github.actor }}  # 自动使用你的用户名（Jiyufor）
+        password: ${{ secrets.GITHUB_TOKEN }}  # 使用默认Token
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Build and push Docker image
+    - name: Build and push
       uses: docker/build-push-action@v6
       with:
         context: .
         push: true
         tags: |
-          ghcr.io/${{ github.repository_owner }}/hajimi:latest
-          ghcr.io/${{ github.repository_owner }}/hajimi:${{ steps.version.outputs.VERSION }}
-        platforms: linux/amd64  # 先单平台测试，成功后可加回多平台
+          ghcr.io/jiyufor/hajimi:latest  # 关键修改：直接写死你的用户名（全小写）
+          ghcr.io/jiyufor/hajimi:${{ steps.version.outputs.VERSION }}  # 同样全小写
+        platforms: linux/amd64  # 单平台确保成功
